@@ -35,9 +35,9 @@ function CanvasDragDrop(canvas){
     this.callbacks["move"] = function(e){
         /* do not prevent zooming */
         if((e.touches||[]).length > 1) return;
-        e.preventDefault();
         /* if any element is being dragged, update position */
         if(that.dragged){
+            e.preventDefault();
             e.draggable = that.dragged.obj;
             var coords = that.relMouseCoords(e);
             that.cached_coords = coords;
