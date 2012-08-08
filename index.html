@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Canvas-dragdrop.js demo</title>
+        <script src="canvas-dragdrop.js"></script>
+    </head>
+    <body>
+        <canvas id=canvas witdh=800 height=480></canvas>
+        <script>
+
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var some_object = {position: {x:20,y:20}, size:{w:100,h:120}};
+
+            var cdd = new CanvasDragDrop(canvas);
+            cdd.makeDraggable(some_object);
+
+
+            /* a simple game loop */
+            setInterval(function(){
+
+                /* clear canvas */
+                ctx.fillStyle = "white";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                /* draw objects to screen */
+                ctx.fillStyle = "black";
+                ctx.fillRect(some_object.position.x, some_object.position.y, some_object.size.w, some_object.size.h);
+            },10);
+        </script>
+    </body>
+</html>
