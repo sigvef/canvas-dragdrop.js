@@ -87,16 +87,16 @@ CanvasDragDrop.prototype.remove = function(obj){
             for(var j in this.draggables[i].callbacks){
                 this.canvas.removeEventListener(j,this.draggables[i].callbacks[j]);
             }
-            Array.remove(i--);
+            Array.remove(this.draggables,i--);
             break;
         }
     }
     for(var i=0;i<this.droppables.length;i++){
         if(obj == this.droppables[i].obj){
-            for(var j in this.draggables[i].callbacks){
-                this.canvas.removeEventListener(j,this.draggables[i].callbacks[j]);
+            for(var j in this.droppables[i].callbacks){
+                this.canvas.removeEventListener(j,this.droppables[i].callbacks[j]);
             }
-            Array.remove(i--);
+            Array.remove(this.droppables,i--);
             break;
         }
     }
