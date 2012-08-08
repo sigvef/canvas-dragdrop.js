@@ -17,7 +17,6 @@
             cdd.makeDraggable(some_object);
             cdd.makeDroppable(other_object,{
                 "drop":function(e){
-                    console.log(this);
                     this.color = ["green","red"][+(this.color!="red")];
                 }
             });
