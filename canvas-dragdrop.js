@@ -14,7 +14,10 @@ function CanvasDragDrop(canvas){
         for(var i=0;i<that.draggables.length;i++){
             var draggable = that.draggables[i];
             if(that.contains(draggable.obj, coords)){
-                /* TODO: do we need to defensively check if anything is already being dragged? */
+                /* defensively check if anything is already being dragged */
+                if(that.dragged){
+                    (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
+                }
                 that.dragged = draggable;
                 that.xoffset = -draggable.obj.position.x + coords.x;
                 that.yoffset = -draggable.obj.position.y + coords.y;
@@ -46,7 +49,6 @@ function CanvasDragDrop(canvas){
                 }
             }
             that.dragged = undefined;
-
         }
     });
 }
@@ -59,39 +61,39 @@ CanvasDragDrop.prototype.contains = function(obj, point){
 }
 
 
-    CanvasDragDrop.prototype.makeDroppable = function(obj, callbacks){
-        /* check if obj is not already droppable */
-        for(var i=0;i<this.droppables.length;i++){
-            if(obj == this.droppables[i].obj) return;
-        }
-        this.droppables.push({obj:obj, callbacks:callbacks||{}});
+CanvasDragDrop.prototype.makeDroppable = function(obj, callbacks){
+    /* check if obj is not already droppable */
+    for(var i=0;i<this.droppables.length;i++){
+        if(obj == this.droppables[i].obj) return;
     }
+    this.droppables.push({obj:obj, callbacks:callbacks||{}});
+}
 
-    CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
-        /* check if object already draggable */
-        for(var i=0;i<this.draggables.length;i++){
-            if(obj == this.draggables[i].obj) return;
-        }
-        this.draggables.push({obj:obj, callbacks:callbacks||{}});
+CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
+    /* check if object already draggable */
+    for(var i=0;i<this.draggables.length;i++){
+        if(obj == this.draggables[i].obj) return;
     }
+    this.draggables.push({obj:obj, callbacks:callbacks||{}});
+}
 
 
-    /* adapted from http://stackoverflow.com/a/5932203/1083927 */
-    CanvasDragDrop.prototype.relMouseCoords = function(e){
-        var totalOffsetX = 0;
-        var totalOffsetY = 0;
-        var canvasX = 0;
-        var canvasY = 0;
-        var currentElement = this.canvas;
+/* adapted from http://stackoverflow.com/a/5932203/1083927 */
+CanvasDragDrop.prototype.relMouseCoords = function(e){
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this.canvas;
 
-        do{
-            totalOffsetX += currentElement.offsetLeft;
-            totalOffsetY += currentElement.offsetTop;
-        }
-        while(currentElement = currentElement.offsetParent)
-
-            canvasX = event.pageX - totalOffsetX;
-        canvasY = event.pageY - totalOffsetY;
-
-        return {x:canvasX, y:canvasY}
+    do{
+        totalOffsetX += currentElement.offsetLeft;
+        totalOffsetY += currentElement.offsetTop;
     }
+    while(currentElement = currentElement.offsetParent)
+
+        canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x:canvasX, y:canvasY}
+}
