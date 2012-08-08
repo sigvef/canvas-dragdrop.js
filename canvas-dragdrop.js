@@ -83,13 +83,19 @@ CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
 
 CanvasDragDrop.prototype.remove = function(obj){
     for(var i=0;i<this.draggables.length;i++){
-        if(obj == this.draggables[i]){
+        if(obj == this.draggables[i].obj){
+            for(var j in this.draggables[i].callbacks){
+                this.canvas.removeEventListener(j,this.draggables[i].callbacks[j]);
+            }
             Array.remove(i--);
             break;
         }
     }
     for(var i=0;i<this.droppables.length;i++){
-        if(obj == this.droppables[i]){
+        if(obj == this.droppables[i].obj){
+            for(var j in this.draggables[i].callbacks){
+                this.canvas.removeEventListener(j,this.draggables[i].callbacks[j]);
+            }
             Array.remove(i--);
             break;
         }
