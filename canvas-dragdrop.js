@@ -38,6 +38,7 @@ function CanvasDragDrop(canvas){
         /* if any element is being dragged, set as undragged, and see if any element has been dropped upon */
         if(that.dragged){
             var coords = that.relMouseCoords(e);
+            console.log("x",coords.x,"y", coords.y);
             (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
             for(var i=0;i<that.droppables.length;i++){
                 var droppable = that.droppables[i];
@@ -55,7 +56,7 @@ CanvasDragDrop.prototype.contains = function(obj, point){
     /* simple AABB */
     var x = obj.position.x; var y = obj.position.y;
     var w = obj.size.w; var h = obj.size.h;
-    return w>0&&h>0&&point.x>=x&&point.x<x+h&&point.y>=y&&point.y<y+h;
+    return w>0&&h>0&&point.x>=x&&point.x<x+w&&point.y>=y&&point.y<y+h;
 }
 
 
