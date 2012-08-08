@@ -6,8 +6,11 @@ function CanvasDragDrop(canvas){
     this.xoffset = 0;
     this.yoffset = 0;
 
+    this.cached_coords = {x:0,y:0};
+
     var that = this;
-    this.canvas.addEventListener("mousedown", function(e){
+    this.callbacks = {};
+    this.callbacks["start"] = function(e){
         /* find element under mouse position */
         var coords = that.relMouseCoords(e);
         /* if there is an element, set as only item being dragged */
@@ -27,20 +30,24 @@ function CanvasDragDrop(canvas){
                 break;
             }
         }
-    });
+    };
 
-    this.canvas.addEventListener("mousemove", function(e){
+    this.callbacks["move"] = function(e){
+        /* do not prevent zooming */
+        if((e.touches||[]).length > 1) return;
+        e.preventDefault();
         /* if any element is being dragged, update position */
         if(that.dragged){
             e.draggable = that.dragged.obj;
             var coords = that.relMouseCoords(e);
+            that.cached_coords = coords;
             that.dragged.obj.position.x = coords.x-that.xoffset;
             that.dragged.obj.position.y = coords.y-that.yoffset;
             (that.dragged.callbacks["dragmove"]||function(e){}).call(that.dragged.obj,e);
         }
-    });
+    };
 
-    this.canvas.addEventListener("mouseup", function(e){
+    this.callbacks["end"] = function(e){
         /* if any element is being dragged, set as undragged, and see if any element has been dropped upon */
         if(that.dragged){
             var coords = that.relMouseCoords(e);
@@ -54,7 +61,14 @@ function CanvasDragDrop(canvas){
             }
             that.dragged = undefined;
         }
-    });
+    };
+
+    this.canvas.addEventListener("mousedown",this.callbacks["start"]);
+    this.canvas.addEventListener("touchstart",this.callbacks["start"]);
+    this.canvas.addEventListener("mousemove",this.callbacks["move"]);
+    this.canvas.addEventListener("touchmove",this.callbacks["move"]);
+    this.canvas.addEventListener("mouseup",this.callbacks["end"]);
+    this.canvas.addEventListener("touchend",this.callbacks["end"]);
 }
 
 CanvasDragDrop.prototype.contains = function(obj, point){
@@ -114,10 +128,10 @@ CanvasDragDrop.prototype.relMouseCoords = function(e){
         totalOffsetX += currentElement.offsetLeft;
         totalOffsetY += currentElement.offsetTop;
     }
-    while(currentElement = currentElement.offsetParent)
+    while(currentElement = currentElement.offsetParent);
 
-        canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
+    canvasX = (event.pageX||(event.touches[0]&&event.touches[0].pageX)||(this.cached_coords.x+totalOffsetX)) - totalOffsetX;
+    canvasY = (event.pageY||(event.touches[0]&&event.touches[0].pageY)||(this.cached_coords.y+totalOffsetY)) - totalOffsetY;
 
     return {x:canvasX, y:canvasY}
 }
