@@ -5,15 +5,22 @@
         <script src="canvas-dragdrop.js"></script>
     </head>
     <body>
-        <canvas id=canvas witdh=800 height=480></canvas>
+        <canvas id=canvas width=800 height=480></canvas>
         <script>
 
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
             var some_object = {position: {x:20,y:20}, size:{w:100,h:120}};
+            var other_object = {position: {x:300,y:220}, size:{w:50,h:20}, color:"red"};
 
             var cdd = new CanvasDragDrop(canvas);
             cdd.makeDraggable(some_object);
+            cdd.makeDroppable(other_object,{
+                "drop":function(e){
+                    console.log(this);
+                    this.color = ["green","red"][+(this.color!="red")];
+                }
+            });
 
 
             /* a simple game loop */
@@ -26,6 +33,8 @@
                 /* draw objects to screen */
                 ctx.fillStyle = "black";
                 ctx.fillRect(some_object.position.x, some_object.position.y, some_object.size.w, some_object.size.h);
+                ctx.fillStyle = other_object.color;
+                ctx.fillRect(other_object.position.x, other_object.position.y, other_object.size.w, other_object.size.h);
             },10);
         </script>
     </body>

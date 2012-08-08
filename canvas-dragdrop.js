@@ -18,8 +18,7 @@ function CanvasDragDrop(canvas){
                 that.dragged = draggable;
                 that.xoffset = -draggable.obj.position.x + coords.x;
                 that.yoffset = -draggable.obj.position.y + coords.y;
-                console.log(that.xoffset, that.yoffset);
-                (that.dragged.callbacks["dragstart"]||function(e){})(e);
+                (that.dragged.callbacks["dragstart"]||function(e){}).call(draggable.obj,e);
                 break;
             }
         }
@@ -31,31 +30,38 @@ function CanvasDragDrop(canvas){
             var coords = that.relMouseCoords(e);
             that.dragged.obj.position.x = coords.x-that.xoffset;
             that.dragged.obj.position.y = coords.y-that.yoffset;
+            (that.dragged.callbacks["dragmove"]||function(e){}).call(that.dragged.obj,e);
         }
     });
 
     this.canvas.addEventListener("mouseup", function(e){
         /* if any element is being dragged, set as undragged, and see if any element has been dropped upon */
         if(that.dragged){
-            (that.dragged.callbacks["dragend"]||function(){})(e);
+            var coords = that.relMouseCoords(e);
+            (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
+            for(var i=0;i<that.droppables.length;i++){
+                var droppable = that.droppables[i];
+                if(that.contains(droppable.obj, coords)){
+                    (droppable.callbacks["drop"]||function(){}).call(droppable.obj,e); 
+                }
+            }
             that.dragged = undefined;
+
         }
     });
 }
 
 CanvasDragDrop.prototype.contains = function(obj, point){
     /* simple AABB */
-    var x = obj.position.x;
-    var y = obj.position.y;
-    var w = obj.size.w;
-    var h = obj.size.h;
+    var x = obj.position.x; var y = obj.position.y;
+    var w = obj.size.w; var h = obj.size.h;
     return w>0&&h>0&&point.x>=x&&point.x<x+h&&point.y>=y&&point.y<y+h;
 }
 
 
     CanvasDragDrop.prototype.makeDroppable = function(obj, callbacks){
         /* TODO: check if object already droppable  */
-        this.droppable.push({obj:obj, callbacks:callbacks||{}});
+        this.droppables.push({obj:obj, callbacks:callbacks||{}});
     }
 
     CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
