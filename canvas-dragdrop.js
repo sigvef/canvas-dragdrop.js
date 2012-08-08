@@ -38,7 +38,6 @@ function CanvasDragDrop(canvas){
         /* if any element is being dragged, set as undragged, and see if any element has been dropped upon */
         if(that.dragged){
             var coords = that.relMouseCoords(e);
-            console.log("x",coords.x,"y", coords.y);
             (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
             for(var i=0;i<that.droppables.length;i++){
                 var droppable = that.droppables[i];
