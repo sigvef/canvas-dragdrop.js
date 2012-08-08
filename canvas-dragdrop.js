@@ -60,12 +60,18 @@ CanvasDragDrop.prototype.contains = function(obj, point){
 
 
     CanvasDragDrop.prototype.makeDroppable = function(obj, callbacks){
-        /* TODO: check if object already droppable  */
+        /* check if obj is not already droppable */
+        for(var i=0;i<this.droppables.length;i++){
+            if(obj == this.droppables[i].obj) return;
+        }
         this.droppables.push({obj:obj, callbacks:callbacks||{}});
     }
 
     CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
-        /* TODO: check if object already draggable */
+        /* check if object already draggable */
+        for(var i=0;i<this.draggables.length;i++){
+            if(obj == this.draggables[i].obj) return;
+        }
         this.draggables.push({obj:obj, callbacks:callbacks||{}});
     }
 
