@@ -22,6 +22,7 @@ function CanvasDragDrop(canvas){
                     e.draggable = that.dragged.obj;
                     (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
                 }
+                e.preventDefault();
                 that.dragged = draggable;
                 that.xoffset = -draggable.obj.position.x + coords.x;
                 that.yoffset = -draggable.obj.position.y + coords.y;
