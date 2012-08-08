@@ -16,11 +16,13 @@ function CanvasDragDrop(canvas){
             if(that.contains(draggable.obj, coords)){
                 /* defensively check if anything is already being dragged */
                 if(that.dragged){
+                    e.draggable = that.dragged;
                     (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
                 }
                 that.dragged = draggable;
                 that.xoffset = -draggable.obj.position.x + coords.x;
                 that.yoffset = -draggable.obj.position.y + coords.y;
+                e.draggable = that.dragged;
                 (that.dragged.callbacks["dragstart"]||function(e){}).call(draggable.obj,e);
                 break;
             }
@@ -30,6 +32,7 @@ function CanvasDragDrop(canvas){
     this.canvas.addEventListener("mousemove", function(e){
         /* if any element is being dragged, update position */
         if(that.dragged){
+            e.draggable = that.dragged;
             var coords = that.relMouseCoords(e);
             that.dragged.obj.position.x = coords.x-that.xoffset;
             that.dragged.obj.position.y = coords.y-that.yoffset;
@@ -41,6 +44,7 @@ function CanvasDragDrop(canvas){
         /* if any element is being dragged, set as undragged, and see if any element has been dropped upon */
         if(that.dragged){
             var coords = that.relMouseCoords(e);
+            e.draggable = that.dragged;
             (that.dragged.callbacks["dragend"]||function(){}).call(that.dragged.obj,e);
             for(var i=0;i<that.droppables.length;i++){
                 var droppable = that.droppables[i];
