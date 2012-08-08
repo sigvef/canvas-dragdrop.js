@@ -81,6 +81,20 @@ CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
     this.draggables.push({obj:obj, callbacks:callbacks||{}});
 }
 
+CanvasDragDrop.prototype.delete = function(obj){
+    for(var i=0;i<this.draggables.length;i++){
+        if(obj == this.draggables[i]){
+            Array.remove(i--);
+            break;
+        }
+    }
+    for(var i=0;i<this.droppables.length;i++){
+        if(obj == this.droppables[i]){
+            Array.remove(i--);
+            break;
+        }
+    }
+}
 
 /* adapted from http://stackoverflow.com/a/5932203/1083927 */
 CanvasDragDrop.prototype.relMouseCoords = function(e){
@@ -101,3 +115,13 @@ CanvasDragDrop.prototype.relMouseCoords = function(e){
 
     return {x:canvasX, y:canvasY}
 }
+
+
+/* added for convenience */
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.remove = function(array, from, to) {
+      var rest = array.slice((to || from) + 1 || array.length);
+        array.length = from < 0 ? array.length + from : from;
+          return array.push.apply(array, rest);
+};
