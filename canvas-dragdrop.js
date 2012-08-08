@@ -81,7 +81,7 @@ CanvasDragDrop.prototype.makeDraggable = function(obj, callbacks){
     this.draggables.push({obj:obj, callbacks:callbacks||{}});
 }
 
-CanvasDragDrop.prototype.delete = function(obj){
+CanvasDragDrop.prototype.remove = function(obj){
     for(var i=0;i<this.draggables.length;i++){
         if(obj == this.draggables[i]){
             Array.remove(i--);
