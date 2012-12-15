@@ -64,12 +64,12 @@ function CanvasDragDrop(canvas){
         }
     };
 
-    this.canvas.addEventListener("mousedown",this.callbacks["start"]);
-    this.canvas.addEventListener("touchstart",this.callbacks["start"]);
-    this.canvas.addEventListener("mousemove",this.callbacks["move"]);
-    this.canvas.addEventListener("touchmove",this.callbacks["move"]);
-    this.canvas.addEventListener("mouseup",this.callbacks["end"]);
-    this.canvas.addEventListener("touchend",this.callbacks["end"]);
+    window.addEventListener("mousedown",this.callbacks["start"]);
+    window.addEventListener("touchstart",this.callbacks["start"]);
+    window.addEventListener("mousemove",this.callbacks["move"]);
+    window.addEventListener("touchmove",this.callbacks["move"]);
+    window.addEventListener("mouseup",this.callbacks["end"]);
+    window.addEventListener("touchend",this.callbacks["end"]);
 }
 
 CanvasDragDrop.prototype.contains = function(obj, point){
